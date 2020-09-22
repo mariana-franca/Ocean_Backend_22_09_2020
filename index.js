@@ -2,18 +2,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3000;
+//const porta = 3000;
+const porta = process.env.PORT || 3000;
 
 const jsonParser = bodyParser.json();
 app.use(jsonParser);
 
-app.get('/', (req, res) => {
-    res.send('Hello world!');
+
+app.get('/', (req,res) => {
+    res.send('Hello World');
 });
 
-// Endpoints de envio de mensagens
-// CRUD -> Create, Read (Read All e Read Single), Update and Delete
-// CRUD -> Criar, Ler (Ler tudo e ler individualmente), atualizar e remover
+//Endpoints de envio de mensagens
+//CRUD -> create, read(read all e read single), Uptade and Delete
+//CRUD -> criar, lar(ler tudo e ler individualmente), atualizar e remover
 
 const mensagens = [
     {
@@ -22,73 +24,73 @@ const mensagens = [
     },
     {
         id: 1,
-        texto: "Essa é outra mensagem"
+        texto:"Essa é outra mensagem"
     },
+
 ];
 
-// Read All
-app.get('/mensagens', (req, res) => {
-    res.json(mensagens.filter(Boolean));
+//Read All
+app.get('/mensagens', (req,res) => {
+    res.json(mensagens);
 });
 
-// Create
-app.post('/mensagens', (req, res) => {
-    // Obtendo a mensagem que foi recebida através do body da requisição
+//Create
+app.post('/mensagens', (req,res) => {
+    //Obtendo a mensagem que foi recebida atraves do body de requisição
     const mensagem = req.body;
 
-    // Obtendo o ID da nova mensagem
-    const id = mensagens.length;
+    const id = mensagens.length
+    //insiro a mensagem na lista de mensagens
 
-    // Atualiza o objeto de mensagem enviado pela requisição com o ID que foi calculado
     mensagem.id = id;
 
-    // Insiro a mensagem na lista de mensagens
     mensagens.push(mensagem);
 
-    // Envio a mensagem de sucesso, informando o ID obtido
-    res.send(`A mensagem com o texto '${mensagem.texto}' foi criada com sucesso. ID: ${id}.`);
+    //const id = mensagens.length - 1;
+
+    //Exibindo o ID da mensagem, que no caso é o indice que ela foi adicionada
+    res.send(`A mensagem com texto ${mensagem.texto} foi criada. ID : ${id}`);
 });
 
-// Read Single
-app.get('/mensagens/:id', (req, res) => {
-    // Pega o ID através dos parâmetros da requisição
+// Read single
+app.get('/mensagens/:id', (req,res) => {
+    //pega os ID atraves dos parametros da requisiação 
     const id = req.params.id;
-
-    // Acessamos a mensagem de acordo com o ID informado
+    
+    //
     const mensagem = mensagens[id];
 
-    res.json(mensagem);
-    
-    /*
-    // Referência, passando também o ID em um objeto de mensagem
-    res.json({ id, mensagem });
-    */
+    res.json(mensagem)
+    // res.json({ id, ,mensagem})
 });
 
-// Update
-app.put('/mensagens/:id', (req, res) => {
-    // Acessa o ID pelos parâmetros
+    //res.send('Exibe uma mensagemm selecionada pelo ID que foi informado');
+
+//Uptade
+app.put('/mensagens/:id', (req,res) => {
+    //Acessa o Id pelos parametros
     const id = req.params.id;
-
-    // Obtém a mensagem que foi enviada pelo usuário no corpo (body) da requisição
+//obtem a mensagem que foi nviada pelo usuario no corpo (body) da requisição
     const novoTexto = req.body.texto;
+//atuaiza a mensagem direto na lista de mensgens, acessando pelo ID que foi informado
+    mensagens[id].texto= novoTexto;
 
-    // Atualiza a mensagem direto na lista de mensagens, acessando pelo ID que foi informado
-    mensagens[id].texto = novoTexto;
-
-    // Envia uma mensagem de sucesso.
-    res.send(`Mensagem com o ID ${id} foi atualizada com sucesso.`);
+    res.send(`Mensagem com ID ${id} foi atualizado com sucesso`);
 });
 
-// Delete
-app.delete('/mensagens/:id', (req, res) => {
+//Delete
+app.delete('/mensagens/:id', (req,res) => {
+
     const id = req.params.id;
 
     delete mensagens[id];
 
-    res.send(`Mensagem com o ID ${id} foi removida com sucesso.`);
+
+    res.send(`Mensagem com ID ${id} foi removida com sucesso`);
 });
 
-app.listen(port, () => {
-    console.log(`App rodando em http://localhost:${port}`);
+
+
+app.listen(porta, () => {
+    console.log(`App rodando em http://localhost:${porta}`);
 });
